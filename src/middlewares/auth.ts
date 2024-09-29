@@ -10,11 +10,13 @@ const authMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-  if (!token) {
-    next(new UnauthorizeException("Unauthorize", ErrorCode.UNAUTHORIZED));
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next(new UnauthorizeException("Unauthorize", ErrorCode.UNAUTHORIZED));
   }
+
+  const token = authHeader.split(' ')[1];
 
   try {
     const payload = jwt.verify(token, JWT_SECRET) as any;
