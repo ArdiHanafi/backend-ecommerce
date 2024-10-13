@@ -44,7 +44,7 @@ export const createOrder = async (req: Request, res: Response) => {
       }
     });
 
-    const orderEvent = await tx.orderEvent.create({
+    await tx.orderEvent.create({
       data: {
         orderId: order.id
       }

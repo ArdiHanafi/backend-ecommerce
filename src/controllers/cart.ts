@@ -6,28 +6,40 @@ import { Product } from "@prisma/client";
 import { prismaClient } from "..";
 
 export const addItemToCart = async (req: Request, res: Response) => {
-  const validatedData = CreateCartSchema.parse(req.body);
-  let product: Product;
+  return await prismaClient.$transaction(async (tx) => {
+    const validatedData = CreateCartSchema.parse(req.body);
+    let product: Product;
 
-  try {
-    product = await prismaClient.product.findFirstOrThrow({
-      where: {
-        id: validatedData.productId
-      }
-    })
+    try {
+      product = await prismaClient.product.findFirstOrThrow({
+        where: {
+          id: validatedData.productId
+        }
+      })
 
-  } catch (err) {
-    throw new NotFoundException('Product not found!', ErrorCode.PRODUCT_NOT_FOUND)
-  }
-
-  const cart = await prismaClient.cartItem.create({
-    data: {
-      userId: req.user.id,
-      productId: product.id,
-      quantity: validatedData.quantity
+    } catch (err) {
+      throw new NotFoundException('Product not found!', ErrorCode.PRODUCT_NOT_FOUND)
     }
-  })
-  res.json(cart);
+
+    const cartItem = await tx.cartItem.findFirst({
+      where: { productId: validatedData.productId, userId: req.user.id }
+    });
+
+    const cart = cartItem
+      ? await tx.cartItem.update({
+        where: { id: cartItem.id },
+        data: { quantity: cartItem.quantity + validatedData.quantity }
+      })
+      : await tx.cartItem.create({
+        data: {
+          userId: req.user.id,
+          productId: product.id,
+          quantity: validatedData.quantity
+        }
+      });
+
+    return res.json(cart);
+  });
 };
 
 export const deleteItemFromCart = async (req: Request, res: Response) => {
@@ -64,8 +76,8 @@ export const getCart = async (req: Request, res: Response) => {
   })
 
   const response = {
-    products: cart.map((item) => ({cartId: item.id, quantity: item.quantity, ...item.product}))
+    products: cart.map((item) => ({ cartId: item.id, quantity: item.quantity, ...item.product }))
   };
-  
+
   res.json(response);
 };
