@@ -62,6 +62,10 @@ export const getCart = async (req: Request, res: Response) => {
       product: true
     }
   })
+
+  const response = {
+    products: cart.map((item) => ({cartId: item.id, quantity: item.quantity, ...item.product}))
+  };
   
-  res.json(cart);
+  res.json(response);
 };
