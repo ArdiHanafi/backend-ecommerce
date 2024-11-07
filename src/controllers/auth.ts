@@ -49,6 +49,8 @@ export const login = async (req: Request, res: Response) => {
     },
     JWT_SECRET
   );
+  
+  delete user.password;
 
   res.json({ user, token });
 };
