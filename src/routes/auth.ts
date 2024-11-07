@@ -104,9 +104,6 @@ authRoutes.post("/login", errorHandler(login));
  *                   format: email
  *                 role:
  *                   type: string
- *                 password:
- *                   type: string
- *                   description: "Hashed password"
  *                 defaultShippingAddressId:
  *                   type: string
  *                   nullable: true
