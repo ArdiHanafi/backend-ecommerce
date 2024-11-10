@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { prismaClient } from "..";
 import { NotFoundException } from "../exceptions/not-found";
 import { ErrorCode } from "../exceptions/root";
-import { count } from "console";
 
 export const createProduct = async (req: Request, res: Response) => {
   const product = await prismaClient.product.create({
@@ -26,12 +25,13 @@ export const updateProduct = async (req: Request, res: Response) => {
       },
       data: product,
     });
-    res.json(updateProduct);
+    res.json(updatedProduct);
   } catch (error) {
-    throw new NotFoundException(
-      "Product not found!",
-      ErrorCode.PRODUCT_NOT_FOUND
-    );
+    // throw new NotFoundException(
+    //   "Product not found!",
+    //   ErrorCode.PRODUCT_NOT_FOUND
+    // );
+    throw Error(error);
   }
 };
 
@@ -71,8 +71,10 @@ export const searchProduct = async (req: Request, res: Response) => {
   const products: any[] = searchTerm
     ? await prismaClient.$queryRaw`
       SELECT * FROM "products"
-      WHERE to_tsvector('english', name || ' ' || description || ' ' || tags) @@ plainto_tsquery('english', ${searchTerm});
-    `
+      WHERE name ILIKE '%' || ${searchTerm} || '%' 
+        OR description ILIKE '%' || ${searchTerm} || '%' 
+        OR tags ILIKE '%' || ${searchTerm} || '%';
+      `
     : await prismaClient.product.findMany();
 
   res.json({
