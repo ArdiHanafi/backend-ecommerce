@@ -1,7 +1,9 @@
-import { Express, Request, Response } from 'express';
+import { NODE_ENV } from '../secrets';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { version } from '../../package.json';
+import { Express, Request, Response } from 'express';
+import basicAuthMiddleware from '../middlewares/basicAuth';
 
 const options: swaggerJsdoc.Options = {
   definition: {
@@ -41,7 +43,11 @@ const options: swaggerJsdoc.Options = {
 const swaggerSpec = swaggerJsdoc(options);
 
 function swaggerDocs(app: Express, port: string) {
-  app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  if (NODE_ENV === 'production') {
+    app.use('/swagger', basicAuthMiddleware, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  } else {
+    app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  }
 
   app.get('swagger.json', (req: Request, res: Response) => {
     res.setHeader("Content-Type", "application/json");
