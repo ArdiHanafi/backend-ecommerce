@@ -58,6 +58,8 @@ export const login = async (req: Request, res: Response) => {
 };
 
 export const me = async (req: Request, res: Response) => {
+  const resUser = req.user;
+  delete resUser.password;
 
   res.json(req.user);
 };

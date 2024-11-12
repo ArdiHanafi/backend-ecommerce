@@ -24,6 +24,7 @@ const options: swaggerJsdoc.Options = {
       { name: 'Auth', description: 'User Authentication' },
       { name: 'Products', description: 'Products' },
       { name: 'Cart', description: 'User Cart' },
+      { name: 'Users', description: 'Users' },
       { name: 'AdminProduct', description: 'Admin Product' },
       { name: 'AdminUser', description: 'Admin User' },
       { name: 'AdminOrder', description: 'Admin Order' },

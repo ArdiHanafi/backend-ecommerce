@@ -41,10 +41,10 @@ export const listAddress = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
+  console.log('OKEOKE')
   const validatedData = updateUserSchema.parse(req.body);
   let shippingAddress: Address;
   let billingAddress: Address;
-
   if (validatedData.defaultShippingAddressId) {
     try {
       shippingAddress = await prismaClient.address.findFirstOrThrow({
@@ -89,9 +89,13 @@ export const updateUser = async (req: Request, res: Response) => {
 export const listUsers = async (req: Request, res: Response) => {
   const users = await prismaClient.user.findMany({
     skip: +req.query.skip || 0,
-    take: 5 
+    take: 5
   })
-  res.json(users)
+  const resUsers = users.map((usr) => {
+    delete usr.password;
+    return { ...usr };
+  })
+  res.json(resUsers);
 };
 
 export const getUserById = async (req: Request, res: Response) => {
