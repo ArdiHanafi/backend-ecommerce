@@ -22,11 +22,11 @@ const options: swaggerJsdoc.Options = {
     tags: [
       { name: 'Health Check', description: 'Health check services' },
       { name: 'Auth', description: 'User Authentication' },
+      { name: 'Users', description: 'Users' },
       { name: 'Products', description: 'Products' },
       { name: 'Cart', description: 'User Cart' },
-      { name: 'Users', description: 'Users' },
-      { name: 'AdminProduct', description: 'Admin Product' },
       { name: 'AdminUser', description: 'Admin User' },
+      { name: 'AdminProduct', description: 'Admin Product' },
       { name: 'AdminOrder', description: 'Admin Order' },
     ],
     security: [

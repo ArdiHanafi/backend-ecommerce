@@ -41,7 +41,6 @@ export const listAddress = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-  console.log('OKEOKE')
   const validatedData = updateUserSchema.parse(req.body);
   let shippingAddress: Address;
   let billingAddress: Address;
@@ -108,6 +107,7 @@ export const getUserById = async (req: Request, res: Response) => {
         addresses: true
       }
     })
+    delete user.password;
     res.json(user);
   } catch (error) {
     throw new NotFoundException(
@@ -127,6 +127,7 @@ export const changeUserRole = async (req: Request, res: Response) => {
         role: req.body.role
       }
     })
+    delete user.password;
     res.json(user);
   } catch (error) {
     throw new NotFoundException(
