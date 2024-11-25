@@ -1,7 +1,7 @@
-import { HttpException } from "./root";
+import { HttpException } from './root';
 
 export class UnauthorizeException extends HttpException {
-  constructor(message: string, errorCode: number, errors?:any) {
-    super(message, errorCode, 401, errors)
+  constructor(message: string, errorCode: number, errors?: any) {
+    super(message, errorCode, 401, errors);
   }
 }

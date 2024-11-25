@@ -1,7 +1,12 @@
-import { Router } from "express";
-import authMiddleware from "../middlewares/auth";
-import { errorHandler } from "../error-handler";
-import { addAddress, deleteAddress, listAddress, updateUser } from "../controllers/users";
+import { Router } from 'express';
+import authMiddleware from '../middlewares/auth';
+import { errorHandler } from '../error-handler';
+import {
+  addAddress,
+  deleteAddress,
+  listAddress,
+  updateUser,
+} from '../controllers/users';
 
 const usersRoutes: Router = Router();
 
@@ -89,7 +94,11 @@ usersRoutes.post('/address', [authMiddleware], errorHandler(addAddress));
  *                 success:
  *                   type: boolean
  */
-usersRoutes.delete('/address/:id', [authMiddleware], errorHandler(deleteAddress));
+usersRoutes.delete(
+  '/address/:id',
+  [authMiddleware],
+  errorHandler(deleteAddress)
+);
 
 /**
  * @openapi

@@ -1,10 +1,16 @@
-import { NextFunction, Request, Response } from "express";
-import { HttpException } from "../exceptions/root";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Request, Response, NextFunction } from 'express';
+import { HttpException } from '../exceptions/root';
 
-export const errorMiddleware = (error: HttpException, req:Request, res: Response, next:NextFunction) => {
-  res.status(error.statusCode).json({
+export const errorMiddleware = (
+  error: HttpException,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  res.status(error.statusCode || 500).json({
     message: error.message,
     errorCode: error.errorCode,
-    error: error.errors
-  })
-}
+    error: error.errors,
+  });
+};

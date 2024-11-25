@@ -1,8 +1,8 @@
-import { Router } from "express";
-import { changeUserRole, getUserById, listUsers } from "../controllers/users";
-import { errorHandler } from "../error-handler";
-import adminMiddleware from "../middlewares/admin";
-import authMiddleware from "../middlewares/auth";
+import { Router } from 'express';
+import { changeUserRole, getUserById, listUsers } from '../controllers/users';
+import { errorHandler } from '../error-handler';
+import adminMiddleware from '../middlewares/admin';
+import authMiddleware from '../middlewares/auth';
 
 const adminRoutes: Router = Router();
 
@@ -47,7 +47,11 @@ const adminRoutes: Router = Router();
  *                     type: string
  *                     format: date-time
  */
-adminRoutes.get('/users', [authMiddleware, adminMiddleware], errorHandler(listUsers));
+adminRoutes.get(
+  '/users',
+  [authMiddleware, adminMiddleware],
+  errorHandler(listUsers)
+);
 
 /**
  * @openapi
@@ -122,7 +126,11 @@ adminRoutes.get('/users', [authMiddleware, adminMiddleware], errorHandler(listUs
  *                       formattedAddress:
  *                         type: string
  */
-adminRoutes.get('/users/:id', [authMiddleware, adminMiddleware], errorHandler(getUserById));
+adminRoutes.get(
+  '/users/:id',
+  [authMiddleware, adminMiddleware],
+  errorHandler(getUserById)
+);
 
 /**
  * @openapi
@@ -180,6 +188,10 @@ adminRoutes.get('/users/:id', [authMiddleware, adminMiddleware], errorHandler(ge
  *                   type: string
  *                   format: date-time
  */
-adminRoutes.put('/users/:id/role', [authMiddleware, adminMiddleware], errorHandler(changeUserRole));
+adminRoutes.put(
+  '/users/:id/role',
+  [authMiddleware, adminMiddleware],
+  errorHandler(changeUserRole)
+);
 
 export default adminRoutes;

@@ -1,8 +1,8 @@
-import { NODE_ENV } from '../secrets';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-import { version } from '../../package.json';
 import { Express, Request, Response } from 'express';
+import { version } from '../../package.json';
+import { NODE_ENV } from '../secrets';
 import basicAuthMiddleware from '../middlewares/basicAuth';
 
 const options: swaggerJsdoc.Options = {
@@ -10,7 +10,7 @@ const options: swaggerJsdoc.Options = {
     openapi: '3.0.0',
     info: {
       title: 'E-Commerce API Docs',
-      version
+      version,
     },
     components: {
       securitySchemes: {
@@ -33,24 +33,29 @@ const options: swaggerJsdoc.Options = {
     ],
     security: [
       {
-        bearerAuth: []
-      }
-    ]
+        bearerAuth: [],
+      },
+    ],
   },
-  apis: ['./src/routes/*.ts', './src/schema/*.ts']
+  apis: ['./src/routes/*.ts', './src/schema/*.ts'],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
 function swaggerDocs(app: Express, port: string) {
   if (NODE_ENV === 'production') {
-    app.use('/swagger', basicAuthMiddleware, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    app.use(
+      '/swagger',
+      basicAuthMiddleware,
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerSpec)
+    );
   } else {
     app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }
 
   app.get('swagger.json', (req: Request, res: Response) => {
-    res.setHeader("Content-Type", "application/json");
+    res.setHeader('Content-Type', 'application/json');
     res.send(swaggerSpec);
   });
 

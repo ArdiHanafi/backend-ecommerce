@@ -1,7 +1,7 @@
-import { Router } from "express";
-import { login, me, signup } from "../controllers/auth";
-import { errorHandler } from "../error-handler";
-import authMiddleware from "../middlewares/auth";
+import { Router } from 'express';
+import { login, me, signup } from '../controllers/auth';
+import { errorHandler } from '../error-handler';
+import authMiddleware from '../middlewares/auth';
 
 const authRoutes: Router = Router();
 
@@ -60,7 +60,7 @@ const authRoutes: Router = Router();
  *                token:
  *                  type: string
  */
-authRoutes.post("/login", errorHandler(login));
+authRoutes.post('/login', errorHandler(login));
 
 /**
  * @openapi
@@ -117,7 +117,7 @@ authRoutes.post("/login", errorHandler(login));
  *                   type: string
  *                   format: date-time
  */
-authRoutes.post("/signup", errorHandler(signup));
-authRoutes.get("/me", [authMiddleware], errorHandler(me));
+authRoutes.post('/signup', errorHandler(signup));
+authRoutes.get('/me', [authMiddleware], errorHandler(me));
 
 export default authRoutes;

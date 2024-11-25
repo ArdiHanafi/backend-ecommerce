@@ -1,19 +1,19 @@
-import express, { Express, Request, Response } from "express";
-import { PORT } from "./secrets";
-import rootRouter from "./routes";
-import { PrismaClient } from "@prisma/client";
-import { errorMiddleware } from "./middlewares/errors";
-import swaggerDocs from "./utils/swagger";
+import express, { Express } from 'express';
+import { PrismaClient } from '@prisma/client';
+import { PORT } from './secrets';
+import rootRouter from './routes';
+import { errorMiddleware } from './middlewares/errors';
+import swaggerDocs from './utils/swagger';
 
 const app: Express = express();
 
-app.use(express.json())
+app.use(express.json());
 
-swaggerDocs(app, PORT);
-app.use("/api", rootRouter);
+swaggerDocs(app, PORT as string);
+app.use('/api', rootRouter);
 
 export const prismaClient = new PrismaClient({
-  log: ['query']
+  log: ['query'],
 }).$extends({
   result: {
     address: {
@@ -23,16 +23,16 @@ export const prismaClient = new PrismaClient({
           lineTwo: true,
           city: true,
           country: true,
-          pincode: true
+          pincode: true,
         },
         compute: (addr) => {
-          return `${addr.lineOne}, ${addr.lineTwo}, ${addr.city}, ${addr.country}=${addr.pincode}`
-        }
-      }
-    }
-  }
-})
+          return `${addr.lineOne}, ${addr.lineTwo}, ${addr.city}, ${addr.country}=${addr.pincode}`;
+        },
+      },
+    },
+  },
+});
 
-app.use(errorMiddleware)
+app.use(errorMiddleware as any);
 
 app.listen(PORT, () => console.log(`App running on http://localhost:${PORT}`));

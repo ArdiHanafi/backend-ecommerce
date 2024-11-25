@@ -1,7 +1,7 @@
-import { Request, Response, Router } from "express";
-import { errorHandler } from "../error-handler";
+import { Request, Response, Router } from 'express';
+import { errorHandler } from '../error-handler';
 
-const healthRoutes: Router = Router()
+const healthRoutes: Router = Router();
 
 /**
  * @openapi
@@ -14,6 +14,12 @@ const healthRoutes: Router = Router()
  *       200:
  *         description: API is healthy
  */
-healthRoutes.get('/', [], errorHandler((req: Request, res: Response) => { res.json({ message: 'API is healthy' }); }));
+healthRoutes.get(
+  '/',
+  [],
+  errorHandler((req: Request, res: Response) => {
+    res.json({ message: 'API is healthy' });
+  })
+);
 
 export default healthRoutes;

@@ -1,13 +1,13 @@
-import { Request, Response } from "express";
-import { prismaClient } from "..";
-import { NotFoundException } from "../exceptions/not-found";
-import { ErrorCode } from "../exceptions/root";
+import { Request, Response } from 'express';
+import { prismaClient } from '..';
+import { NotFoundException } from '../exceptions/not-found';
+import { ErrorCode } from '../exceptions/root';
 
 export const createProduct = async (req: Request, res: Response) => {
   const product = await prismaClient.product.create({
     data: {
       ...req.body,
-      tags: req.body.tags.join(","),
+      tags: req.body.tags.join(','),
     },
   });
   res.json(product);
@@ -17,7 +17,7 @@ export const updateProduct = async (req: Request, res: Response) => {
   try {
     const product = req.body;
     if (product.tags) {
-      product.tags.join(",");
+      product.tags.join(',');
     }
     const updatedProduct = await prismaClient.product.update({
       where: {
@@ -27,25 +27,33 @@ export const updateProduct = async (req: Request, res: Response) => {
     });
     res.json(updatedProduct);
   } catch (error) {
-    // throw new NotFoundException(
-    //   "Product not found!",
-    //   ErrorCode.PRODUCT_NOT_FOUND
-    // );
-    throw Error(error);
+    throw new NotFoundException(
+      'Product not found!',
+      ErrorCode.PRODUCT_NOT_FOUND
+    );
   }
 };
 
-export const deleteProduct = async (req: Request, res: Response) => { };
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const deleteProduct = async (req: Request, res: Response) => {};
 
 export const listProducts = async (req: Request, res: Response) => {
-  const count = await prismaClient.product.count();
+  const { page = 1, pageSize = 5 } = req.query;
+
+  const pageNumber = Math.max(1, +page);
+  const pageSizeNumber = Math.max(1, +pageSize);
+
   const products = await prismaClient.product.findMany({
-    skip: +req.query.skip || 0,
-    take: 5,
+    skip: (pageNumber - 1) * pageSizeNumber,
+    take: pageSizeNumber,
   });
+  const totalItems = await prismaClient.product.count();
+
   res.json({
-    count,
-    data: products,
+    items: products,
+    page: pageNumber,
+    pageSize: pageSizeNumber,
+    totalItems,
   });
 };
 
@@ -59,7 +67,7 @@ export const getProductById = async (req: Request, res: Response) => {
     res.json(product);
   } catch (error) {
     throw new NotFoundException(
-      "Product not found!",
+      'Product not found!',
       ErrorCode.PRODUCT_NOT_FOUND
     );
   }
@@ -79,6 +87,6 @@ export const searchProduct = async (req: Request, res: Response) => {
 
   res.json({
     count: products.length,
-    products
+    products,
   });
 };
