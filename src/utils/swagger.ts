@@ -43,16 +43,16 @@ const options: swaggerJsdoc.Options = {
 const swaggerSpec = swaggerJsdoc(options);
 
 function swaggerDocs(app: Express, port: string) {
-  if (NODE_ENV === 'production') {
-    app.use(
-      '/swagger',
-      basicAuthMiddleware,
-      swaggerUi.serve,
-      swaggerUi.setup(swaggerSpec)
-    );
-  } else {
-    app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-  }
+  app.use(
+    '/swagger',
+    NODE_ENV === 'production' ? basicAuthMiddleware : [],
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec)
+  );
+  app.get('/swagger.json', NODE_ENV === 'production' ? basicAuthMiddleware : [], (req: Request, res: Response) => {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+  });
 
   app.get('swagger.json', (req: Request, res: Response) => {
     res.setHeader('Content-Type', 'application/json');
